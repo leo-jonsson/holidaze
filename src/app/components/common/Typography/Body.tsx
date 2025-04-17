@@ -1,21 +1,22 @@
-interface TypographyProps extends React.HTMLAttributes<HTMLHeadingElement> {
+interface TypographyProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "default" | "secondary";
+  label: string;
 }
 
 const Body: React.FC<TypographyProps> = ({
-  children,
+  label: text,
   variant = "default",
   ...props
 }) => {
   return (
-    <h1
+    <p
       className={`text-sm ${
         variant === "secondary" ? "text-muted-foreground" : "text-foreground"
       }`}
       {...props}
     >
-      {children}
-    </h1>
+      {text}
+    </p>
   );
 };
 

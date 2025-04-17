@@ -2,10 +2,16 @@ interface TypographyProps extends React.HTMLAttributes<HTMLHeadingElement> {
   bold?: boolean;
 }
 
-const H1: React.FC<TypographyProps> = ({ title, bold = false, ...props }) => {
+const H1: React.FC<TypographyProps> = ({
+  label: title,
+  bold = false,
+  ...props
+}) => {
   return (
     <h1
-      className={`text-2xl sm:text-4xl md:text-7xl ${bold ?? "text-bold"}`}
+      className={`text-2xl sm:text-4xl md:text-7xl ${
+        bold ? "font-bold" : "font-medium"
+      }`}
       {...props}
     >
       {title}

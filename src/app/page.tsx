@@ -5,8 +5,8 @@ import Typography from "./components/common/Typography";
 export default function Home() {
   return (
     <Section className="min-h-screen">
-      <Typography.H1 title="Welcome" bold />
-      <Button title="hej" />
+      <Typography.H1 label="Welcome" />
+      <Button label="hej" />
     </Section>
   );
 }
