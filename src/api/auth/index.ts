@@ -24,18 +24,15 @@ export async function register(
   }
 }
 
-export async function login(
-  email: string,
-  password: string,
-  dispatch: AppDispatch
-) {
-  try {
-    const data = await fetchWrapper(API_LOGIN_URL, "POST", {
-      email,
-      password,
-    });
+interface LoginPayload {
+  email: string;
+  password: string;
+}
 
-    dispatch(setUser(data));
+export async function login(credentials: LoginPayload, dispatch: AppDispatch) {
+  try {
+    const data = await fetchWrapper(API_LOGIN_URL, "POST", credentials);
+    dispatch(setUser(data.data));
     return data;
   } catch (e) {
     console.log("Titta här:", e);

@@ -18,32 +18,21 @@ import {
 } from "@/app/components/common/DropdownMenu";
 import Button from "@/app/components/common/Button";
 import { buttonVariants } from "../../common/Button/Button";
+import useUser from "@/app/hooks/useUser";
 
-interface NavbarProps {
-  user?: {
-    signedIn: boolean;
-    name?: string;
-    image?: string;
-  };
-  onSignIn?: () => void;
-  onSignUp?: () => void;
-  onSignOut?: () => void;
-}
-
-export function Navbar({ user, onSignIn, onSignUp, onSignOut }: NavbarProps) {
+export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const user = useUser();
 
   return (
-    <nav className="border-b bg-background">
+    <nav className="sm:border bg-background sm:rounded-xl sticky sm:mt-5 sm:top-5 top-0">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
         <div className="flex items-center">
           <Link href="/" className="text-xl font-bold">
             Logo
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex md:items-center md:space-x-8">
           <Link
             href="/"
@@ -83,7 +72,7 @@ export function Navbar({ user, onSignIn, onSignUp, onSignOut }: NavbarProps) {
                 >
                   Venues
                 </Link>
-                {!user?.signedIn ? (
+                {!user?.accessToken ? (
                   <>
                     <Link
                       href="/"
@@ -103,7 +92,6 @@ export function Navbar({ user, onSignIn, onSignUp, onSignOut }: NavbarProps) {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      onSignOut?.();
                       setIsOpen(false);
                     }}
                   >
@@ -116,22 +104,27 @@ export function Navbar({ user, onSignIn, onSignUp, onSignOut }: NavbarProps) {
         </div>
 
         <div className="hidden md:flex md:items-center md:space-x-4">
-          {!user?.signedIn ? (
+          {!user?.accessToken && (
             <>
-              <Button variant="ghost" onClick={onSignIn}>
-                Sign In
-              </Button>
-              <Button onClick={onSignUp}>Sign Up</Button>
+              <Link
+                href="/auth/login"
+                className={buttonVariants({ variant: "default" })}
+              >
+                Sign in
+              </Link>
+
+              <Link
+                href="/auth/register"
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Sign Up
+              </Link>
             </>
-          ) : (
+          )}
+          {user?.accessToken && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
-                >
-                  Test
-                </Button>
+                <Button variant="outline" label={user.name} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -139,9 +132,7 @@ export function Navbar({ user, onSignIn, onSignUp, onSignOut }: NavbarProps) {
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={onSignOut}>
-                  Sign Out
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {}}>Sign Out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
