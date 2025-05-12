@@ -1,7 +1,6 @@
-export function getUserToken() {
-  // TODO Get token from store
+import { store } from "@/redux/store";
 
-  const token = "replace_this_later_with_logic";
-
-  return token;
+export function getUserToken(): string | null {
+  const state = store.getState();
+  return state.app.user?.accessToken ?? null;
 }

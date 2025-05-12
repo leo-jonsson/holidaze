@@ -1,32 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface User {
-  token: string | null;
-}
+import { User } from "@/api/types/user";
 
 interface AppState {
-  user: User;
+  user: User | null;
 }
 
 const initialState: AppState = {
-  user: {
-    token: null,
-  },
+  user: null,
 };
 
 const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    setToken: (state, action: PayloadAction<string>) => {
-      state.user.token = action.payload;
+    setUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
     },
-    clearToken: (state) => {
-      state.user.token = null;
+    clearUser: (state) => {
+      state.user = null;
     },
-    // later: setUser, clearUser, etc.
   },
 });
 
-export const { setToken, clearToken } = appSlice.actions;
+export const { setUser, clearUser } = appSlice.actions;
 export default appSlice.reducer;
