@@ -19,10 +19,14 @@ import {
 import Button from "@/app/components/common/Button";
 import { buttonVariants } from "../../common/Button/Button";
 import useUser from "@/app/hooks/useUser";
+import { useHasMounted } from "@/app/hooks/useHasMounted";
 
 export function Navbar() {
+  const hasMounted = useHasMounted();
   const [isOpen, setIsOpen] = useState(false);
   const user = useUser();
+
+  if (!hasMounted) return null;
 
   return (
     <nav className="sm:border bg-background sm:rounded-xl sticky sm:mt-5 sm:top-5 top-0">

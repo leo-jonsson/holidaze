@@ -19,7 +19,7 @@ const appSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
 
-      storage.save("user", JSON.stringify(action.payload));
+      storage.save("user", action.payload);
     },
     clearUser: (state) => {
       state.user = null;

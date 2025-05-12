@@ -15,6 +15,7 @@ import Input from "@/app/components/common/Input";
 import { login } from "@/api/auth";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
+import Section from "@/app/components/common/Section";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -44,7 +45,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <Section className="min-h-[70vh]">
       <div className="w-full max-w-md">
         <div>
           <Form {...form}>
@@ -95,7 +96,7 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
-    </div>
+    </Section>
   );
 };
 

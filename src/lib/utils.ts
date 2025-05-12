@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // localStorage utils :-)
 
-export const save = (key: string, value: string) => {
+export const save = (key: string, value: string | object) => {
   if (typeof window !== "undefined") {
     localStorage.setItem(key, JSON.stringify(value));
   }
