@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils"; // adjust import to your actual path
+import { cn } from "@/lib/utils"; 
 
 type Props = {
   cols: number;
