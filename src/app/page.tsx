@@ -1,19 +1,24 @@
 "use client";
 
-import { getVenues } from "@/api/venues";
 import Button from "./components/common/Button";
 import Section from "./components/common/Section";
 import Typography from "./components/common/Typography";
-import { useQuery } from "@tanstack/react-query";
+
 import { Venue } from "@/api/types/venues";
+import useVenues from "./hooks/useVenues";
+import { useState } from "react";
+import VenueCard from "./components/common/VenueCard/VenueCard";
 
 export default function Home() {
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["venues"],
-    queryFn: getVenues,
-  });
+  const [page, setPage] = useState(1);
 
-  if (isLoading) {
+  const onClick = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  const { isPending, isError, data, error } = useVenues(page, 12);
+
+  if (isPending) {
     return <p>Loading...</p>;
   }
 
@@ -25,13 +30,13 @@ export default function Home() {
   return (
     <Section className="min-h-screen">
       <Typography.H1 label="Welcome" />
-      <Button label="hej" />
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 flex items-center flex-wrap gap-5">
         {data?.map((venue: Venue) => (
-          <p key={venue.id}>{venue.name}</p>
+          <VenueCard key={venue.id} venue={venue} />
         ))}
       </div>
+      <Button label="NEXT" onClick={onClick} />
     </Section>
   );
 }
