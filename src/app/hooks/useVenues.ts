@@ -1,10 +1,18 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getVenues } from "@/api/venues";
-import { useQuery } from "@tanstack/react-query";
 
-const useVenues = (page: number, limit: number) => {
-  return useQuery({
-    queryKey: ["venues", page, limit],
-    queryFn: () => getVenues(page, limit),
+const useVenues = (limit: number) => {
+  return useInfiniteQuery({
+    queryKey: ["venues"],
+    queryFn: ({ pageParam = 1 }) => getVenues(pageParam, limit),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1;
+      } else {
+        return null;
+      }
+    },
   });
 };
 
