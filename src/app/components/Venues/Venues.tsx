@@ -4,38 +4,41 @@ import { Venue } from "@/api/types/venues";
 import VenueCard from "@/app/components/common/VenueCard/VenueCard";
 import useVenues from "@/app/hooks/useVenues";
 import InfiniteScroll from "@/app/components/InfiniteScroll";
-import Skeleton from "@/app/components/common/Skeleton";
+import { Loader } from "lucide-react";
+import ScrollToTopButton from "@/app/components/ScrollToTopButton";
 
 export default function Venues() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
-    useVenues(12);
+  const { data, fetchNextPage, hasNextPage, isPending } = useVenues(12);
 
-  const venues = data?.pages.flatMap((page) => page.data) || [];
+  const venues = Array.from(
+    new Map(
+      (data?.pages.flatMap((page) => page.data) || []).map((venue) => [
+        venue.id,
+        venue,
+      ])
+    ).values()
+  );
 
   return (
     <>
       <div className="mt-4 flex flex-wrap gap-5">
         {venues.map((venue: Venue) => (
-          <VenueCard key={venue.id} venue={venue} />
+          <VenueCard key={venue.id} venue={venue} loading={isPending} />
         ))}
-
-        {isFetchingNextPage &&
-          Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton
-              key={`skeleton-${i}`}
-              className="flex flex-col gap-3 flex-grow basis-[280px] max-w-sm mx-auto mt-3"
-            />
-          ))}
       </div>
 
       {hasNextPage && (
         <InfiniteScroll
           hasMore={hasNextPage}
           isLoading={isPending}
-          threshold={0.5}
           next={fetchNextPage}
-        ></InfiniteScroll>
+          threshold={0.5}
+        >
+          <Loader className="size-5 animate-spin " />
+        </InfiniteScroll>
       )}
+      <div className="h-[15rem]" />
+      <ScrollToTopButton />
     </>
   );
 }
