@@ -29,3 +29,16 @@ export async function getVenues(
     throw new Error("Failed to fetch venues");
   }
 }
+
+export async function getVenue(id: string): Promise<Venue> {
+  try {
+    const response = await fetchWrapper(
+      `${API_VENUES_URL}/${id}?_owner=true&_bookings=true`,
+      "GET"
+    );
+    return response.data;
+  } catch (e) {
+    console.error(e);
+    throw new Error("Failed to fetch venue");
+  }
+}

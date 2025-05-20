@@ -29,7 +29,7 @@ export function Navbar() {
   if (!hasMounted) return null;
 
   return (
-    <nav className="sm:border bg-background sm:rounded-xl sticky sm:mt-5 sm:top-5 top-0">
+    <nav className="sm:border bg-background sm:rounded-xl sticky sm:mt-5 sm:top-5 top-0 z-[999]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
           <Link href="/" className="text-xl font-bold">

@@ -1,21 +1,21 @@
 interface TypographyProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  variant?: "default" | "bold";
+  bold?: boolean;
 }
 
 const H2: React.FC<TypographyProps> = ({
-  children,
-  variant = "default",
+  label: title,
+  bold = false,
   ...props
 }) => {
   return (
-    <h1
-      className={`text-lg sm:text-xl  md:text-2xl ${
-        variant === "bold" ? "text-bold" : ""
+    <h2
+      className={`text-lg sm:text-xl md:text-3xl ${
+        bold ? "font-bold" : "font-medium"
       }`}
       {...props}
     >
-      {children}
-    </h1>
+      {title}
+    </h2>
   );
 };
 

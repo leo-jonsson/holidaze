@@ -6,6 +6,7 @@ import useVenues from "@/app/hooks/useVenues";
 import InfiniteScroll from "@/app/components/InfiniteScroll";
 import { Loader } from "lucide-react";
 import ScrollToTopButton from "@/app/components/ScrollToTopButton";
+import Section from "../common/Section";
 
 export default function Venues() {
   const { data, fetchNextPage, hasNextPage, isPending } = useVenues(12);
@@ -20,7 +21,7 @@ export default function Venues() {
   );
 
   return (
-    <>
+    <Section>
       <div className="mt-4 flex flex-wrap gap-5">
         {venues.map((venue: Venue) => (
           <VenueCard key={venue.id} venue={venue} loading={isPending} />
@@ -39,6 +40,6 @@ export default function Venues() {
       )}
       <div className="h-[15rem]" />
       <ScrollToTopButton />
-    </>
+    </Section>
   );
 }

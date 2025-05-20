@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Venue } from "@/api/types/venues";
 import React from "react";
 
@@ -5,49 +6,50 @@ type Props = {
   venue: Venue;
 };
 
+const FALLBACK_IMAGE = "/placeholder.jpg"; // Define fallback image path
+
 const VenueMedia: React.FC<Props> = ({ venue }) => {
   const media = venue.media;
 
-  switch (media.length) {
-    case 0:
-      return (
-        <div className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 text-sm">
-          No image available
-        </div>
-      );
+  // Function to get image URL or fallback
+  const getImageUrl = (index: number) => {
+    return media && media.length > index && media[index]?.url
+      ? media[index].url
+      : FALLBACK_IMAGE;
+  };
 
-    case 1:
-      return (
+  // Function to get image alt text or a default
+  const getImageAlt = (index: number) => {
+    return media && media.length > index && media[index]?.alt
+      ? media[index].alt
+      : `Image for ${venue.name}`; // Provide a more informative alt text
+  };
+
+  return (
+    <div className="w-full grid md:grid-cols-2 rounded-lg gap-4 aspect-[16/8] mt-10 overflow-hidden">
+      <div className="overflow-hidden">
         <img
-          src={media[0].url}
-          alt={media[0].alt || "Venue image"}
-          className="aspect-square w-full rounded-lg object-cover"
+          src={getImageUrl(0)}
+          alt={getImageAlt(0)}
+          className="size-full object-cover"
+          loading="lazy"
         />
-      );
-
-    default:
-      return (
-        <div className="grid grid-cols-2 grid-rows-2 gap-2 aspect-square rounded-lg overflow-hidden">
-          {media.slice(0, 4).map((item, index) => {
-            const isLast = index === 3 && media.length > 4;
-            return (
-              <div key={index} className="relative">
-                <img
-                  src={item.url}
-                  alt={item.alt || `Venue image ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-                {isLast && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-medium text-sm">
-                    +{media.length - 4} more
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      );
-  }
+      </div>
+      <div className="grid md:grid-cols-2 gap-4">
+        {" "}
+        {[1, 2, 3, 4].map((index) => (
+          <div key={index} className="overflow-hidden">
+            <img
+              src={getImageUrl(index)}
+              alt={getImageAlt(index)}
+              className="size-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default VenueMedia;
