@@ -98,18 +98,18 @@ const PopoverTrigger = React.forwardRef<HTMLDivElement, PopoverTriggerProps>(
           onClick={openPopover}
           onFocus={openPopover}
           value={fromDate}
-          placeholder="From date"
+          placeholder="From"
           className="cursor-pointer w-full"
-          type="date"
+          aria-label="date"
         />
         <Input
           readOnly
           onClick={openPopover}
           onFocus={openPopover}
           value={toDate}
-          placeholder="To date"
+          placeholder="To"
           className="cursor-pointer w-full"
-          type="date"
+          aria-label="date"
         />
       </motion.div>
     );
@@ -319,7 +319,8 @@ const PopoverSubmitButton = React.forwardRef<
       size="sm"
       onClick={closePopover}
       className={className}
-      aria-label="Submit note"
+      type="button"
+      aria-label="Confirm dates"
     >
       {label}
     </Button>

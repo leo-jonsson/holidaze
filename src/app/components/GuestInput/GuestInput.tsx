@@ -16,6 +16,7 @@ const GuestInput: React.FC<Props> = ({ maxGuest, value, onValueChange }) => {
       value={value}
       onChange={onValueChange}
       minValue={1}
+      defaultValue={Math.round(maxGuest / 2)}
       maxValue={maxGuest}
     >
       <div className="*:not-first:mt-2">

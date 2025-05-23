@@ -5,6 +5,8 @@ import ProfilePicture from "@/app/components/common/ProfilePicture/ProfilePictur
 import Section from "@/app/components/common/Section";
 import Skeleton from "@/app/components/common/Skeleton";
 import Typography from "@/app/components/common/Typography";
+import VenueMap from "@/app/components/common/VenueMap/VenueMap";
+import Recommendations from "@/app/components/Recommendations/Recommendations";
 import VenueMedia from "@/app/components/VenueMedia/VenueMedia";
 import useVenue from "@/app/hooks/useVenue";
 import { Check } from "lucide-react";
@@ -28,7 +30,7 @@ const SingleVenuePage = () => {
 
   if (data)
     return (
-      <Section>
+      <Section className="pb-10">
         {isPending ||
           (isLoading && (
             <div className="w-full">
@@ -48,7 +50,7 @@ const SingleVenuePage = () => {
                   <span className="size-1 rounded-full bg-muted-foreground" />
                   <Typography.H2
                     className="text-lg"
-                    label={`${data.maxGuests.toString()} guests`}
+                    label={`${data.maxGuests.toString()} beds`}
                   />
                 </div>
                 <Typography.H1 label={data.name} className="text-4xl" />
@@ -60,6 +62,15 @@ const SingleVenuePage = () => {
                   <span>{data.owner.email}</span>
                 </div>
                 <ProfilePicture user={data.owner} size={8} />
+              </div>
+              <div className="grid gap-2">
+                <h3 className="text-lg font-bold">Where you&apos;ll be:</h3>
+                <VenueMap
+                  lat={data.location.lat}
+                  lng={data.location.lng}
+                  city={data.location.city}
+                  country={data.location.country}
+                />
               </div>
               <div className="grid">
                 <Typography.Label label="What's included" />
@@ -75,8 +86,15 @@ const SingleVenuePage = () => {
                   ))}
                 </div>
               </div>
+              <Recommendations
+                city={data.location.city}
+                country={data.location.country}
+              />
             </div>
-            <BookingForm venue={data} />
+            <div className="md:hidden h-[20rem]" />
+            <div className="fixed bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg">
+              <BookingForm venue={data} />
+            </div>
           </div>
         </div>
       </Section>

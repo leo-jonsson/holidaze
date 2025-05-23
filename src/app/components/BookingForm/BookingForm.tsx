@@ -5,6 +5,7 @@ import GuestInput from "../GuestInput";
 import Button from "../common/Button";
 import { DateRange } from "react-day-picker";
 import { bookVenue } from "@/api/bookings";
+import Typography from "../common/Typography";
 
 type Props = {
   venue: Venue;
@@ -52,11 +53,17 @@ const BookingForm: React.FC<Props> = ({ venue }) => {
           onDateChange={setSelectedDateRange}
           date={selectedDateRange}
         />
-        <GuestInput
-          maxGuest={venue.maxGuests}
-          value={guestCount}
-          onValueChange={setGuestCount}
-        />
+        <div className="grid gap-1">
+          <div className="flex gap-1">
+            <Typography.Body label="Guests" />
+            <span className="text-xs self-stretch">{`(Max ${venue.maxGuests})`}</span>
+          </div>
+          <GuestInput
+            maxGuest={venue.maxGuests}
+            value={guestCount}
+            onValueChange={setGuestCount}
+          />
+        </div>
         <Button
           label="Book now"
           className="rounded-full py-7 w-full"

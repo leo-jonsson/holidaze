@@ -10,7 +10,7 @@ const Body: React.FC<TypographyProps> = ({
 }) => {
   return (
     <p
-      className={`text-sm ${
+      className={`text-base ${
         variant === "secondary" ? "text-muted-foreground" : "text-foreground"
       }`}
       {...props}
