@@ -16,13 +16,7 @@ import { login } from "@/api/auth";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
 import Section from "@/app/components/common/Section";
-
-const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
-});
+import { loginSchema } from "@/api/zod";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 

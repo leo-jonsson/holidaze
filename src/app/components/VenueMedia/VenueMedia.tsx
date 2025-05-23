@@ -26,7 +26,7 @@ const VenueMedia: React.FC<Props> = ({ venue }) => {
   };
 
   return (
-    <div className="w-full grid md:grid-cols-2 rounded-lg gap-4 aspect-[16/8] mt-10 overflow-hidden">
+    <div className="w-full grid md:grid-cols-2 rounded-lg gap-4 md:aspect-[16/8] mt-10 overflow-hidden">
       <div className="overflow-hidden">
         <img
           src={getImageUrl(0)}

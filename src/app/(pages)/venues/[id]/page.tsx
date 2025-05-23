@@ -1,6 +1,7 @@
 "use client";
 
-import Button from "@/app/components/common/Button";
+import BookingForm from "@/app/components/BookingForm/BookingForm";
+import ProfilePicture from "@/app/components/common/ProfilePicture/ProfilePicture";
 import Section from "@/app/components/common/Section";
 import Skeleton from "@/app/components/common/Skeleton";
 import Typography from "@/app/components/common/Typography";
@@ -23,18 +24,20 @@ const SingleVenuePage = () => {
     );
   }
 
+  console.log(data);
+
   if (data)
     return (
-      <Section className="">
+      <Section>
         {isPending ||
           (isLoading && (
             <div className="w-full">
               <Skeleton className="w-full aspect-video" />
             </div>
           ))}
-        <div className="flex flex-col gap-4 relative min-h-[12030px]">
+        <div className="flex flex-col gap-4 relative ">
           <VenueMedia venue={data} />
-          <div className="grid md:grid-cols-2">
+          <div className="grid md:grid-cols-2 gap-4 relative">
             <div className="grid gap-10">
               <div className="grid gap-2">
                 <div className="flex items-center gap-3 text-muted-foreground">
@@ -51,22 +54,29 @@ const SingleVenuePage = () => {
                 <Typography.H1 label={data.name} className="text-4xl" />
                 <Typography.Body label={data.description} />
               </div>
+              <div className="flex w-full justify-between items-center border py-2 px-5 rounded-lg">
+                <div className="grid">
+                  <span>{data.owner.name}</span>
+                  <span>{data.owner.email}</span>
+                </div>
+                <ProfilePicture user={data.owner} size={8} />
+              </div>
               <div className="grid">
                 <Typography.Label label="What's included" />
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-4 flex-wrap">
                   {Object.entries(data.meta).map(([key, value]) => (
                     <div
                       key={key}
                       className="flex items-center gap-1 text-sm text-muted-foreground"
                     >
                       <span className="capitalize">{key}</span>
-                      {!value && <Check className="w-4 h-4 text-green-600" />}
+                      {value && <Check className="size-4 text-primary" />}
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-            <Button label="test" className="sticky top-0" />
+            <BookingForm venue={data} />
           </div>
         </div>
       </Section>
