@@ -1,5 +1,6 @@
 interface TypographyProps extends React.HTMLAttributes<HTMLHeadingElement> {
   bold?: boolean;
+  label: string;
 }
 
 const H2: React.FC<TypographyProps> = ({

@@ -1,5 +1,5 @@
 import { Venue } from "@/api/types/venues";
-import React from "react";
+import React, { useState } from "react"; // Import useState
 import Typography from "../Typography";
 import VenueRating from "../VenueRating";
 import Link from "next/link";
@@ -13,10 +13,33 @@ type Props = {
 
 const VenueCard: React.FC<Props> = ({ venue, loading }) => {
   const media = venue.media?.[0];
-  const url = media?.url ?? "/placeholder.jpg";
-  const alt = media?.alt ?? "Venue image";
+  const defaultImageUrl = "/placeholder.jpg";
+  const defaultAltText = "Venue image";
+
+  const [imageError, setImageError] = useState(false);
+
+  const imageUrl = media?.url ?? defaultImageUrl;
+  const imageAlt = media?.alt ?? defaultAltText;
+
+  const titleCharacterLimit = 30;
+  const locationCharacterLimit = 25;
+
+  const truncateText = (
+    text: string | null | undefined,
+    limit: number
+  ): string => {
+    if (!text) return "";
+    if (text.length <= limit) {
+      return text;
+    }
+    return `${text.substring(0, limit)}...`;
+  };
 
   if (loading) return <Skeleton />;
+
+  const locationString = `${venue.location.city || ""}, ${
+    venue.location.country || ""
+  }`;
 
   return (
     <Link
@@ -34,18 +57,25 @@ const VenueCard: React.FC<Props> = ({ venue, loading }) => {
       >
         {/* eslint-disable @next/next/no-img-element */}
         <img
-          src={url}
-          alt={alt}
+          src={imageError ? defaultImageUrl : imageUrl}
+          alt={imageAlt} // Use the determined alt text
           loading="lazy"
           className="rounded-lg aspect-square size-full object-cover"
+          onError={() => setImageError(true)}
         />
 
         <div className="w-full flex items-center justify-between">
           <Typography.Label
-            label={`${venue.location.city}, ${venue.location.country}`}
+            label={truncateText(venue.name, titleCharacterLimit)}
+            className="font-semibold"
           />
           <VenueRating venue={venue} />
         </div>
+
+        <Typography.Label
+          label={truncateText(locationString, locationCharacterLimit)}
+        />
+
         <div className="flex items-center gap-1">
           <Typography.Body label={`${venue.price}$`} className="font-medium" />
           <Typography.Body label="/ night" />
