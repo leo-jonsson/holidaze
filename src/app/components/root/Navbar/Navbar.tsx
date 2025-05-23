@@ -20,8 +20,11 @@ import Button from "@/app/components/common/Button";
 import { buttonVariants } from "../../common/Button/Button";
 import useUser from "@/app/hooks/useUser";
 import { useHasMounted } from "@/app/hooks/useHasMounted";
+import { signOut } from "@/api/auth";
+import { useDispatch } from "react-redux";
 
 export function Navbar() {
+  const dispatch = useDispatch();
   const hasMounted = useHasMounted();
   const [isOpen, setIsOpen] = useState(false);
   const user = useUser();
@@ -29,7 +32,7 @@ export function Navbar() {
   if (!hasMounted) return null;
 
   return (
-    <nav className="sm:border bg-background sm:rounded-xl sticky sm:mt-5 sm:top-5 top-0 z-[999] h-[4rem]">
+    <nav className="sm:border bg-background sm:rounded-xl sticky sm:mt-5 sm:top-5 top-0 z-50 h-[4rem]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
           <Link href="/" className="text-xl font-bold">
@@ -50,15 +53,27 @@ export function Navbar() {
           >
             Venues
           </Link>
+          {user?.accessToken && (
+            <Link
+              href="/bookings"
+              className="relative text-sm font-medium text-foreground transition-colors hover:text-primary"
+            >
+              My bookings
+              {user.bookings && user.bookings.length > 0 && (
+                <span className="ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-white">
+                  {user.bookings.length}
+                </span>
+              )}
+            </Link>
+          )}
         </div>
 
         <div className="flex md:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <button className="md:hidden">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
+              </button>
             </SheetTrigger>
             <SheetContent side="right">
               <div className="flex flex-col space-y-4 pt-4">
@@ -95,12 +110,11 @@ export function Navbar() {
                 ) : (
                   <Button
                     variant="outline"
+                    label="Sign Out"
                     onClick={() => {
                       setIsOpen(false);
                     }}
-                  >
-                    Sign Out
-                  </Button>
+                  ></Button>
                 )}
               </div>
             </SheetContent>
@@ -136,7 +150,9 @@ export function Navbar() {
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => {}}>Sign Out</DropdownMenuItem>
+                <DropdownMenuItem onClick={async () => await signOut(dispatch)}>
+                  Sign out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}

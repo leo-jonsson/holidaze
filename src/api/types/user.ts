@@ -1,3 +1,5 @@
+import { Bookings } from "./venues";
+
 export type Avatar = {
   url: string;
   alt: string;
@@ -15,4 +17,5 @@ export interface User {
   banner?: Banner;
   accessToken?: string;
   venueManager?: boolean;
+  bookings?: Bookings[];
 }

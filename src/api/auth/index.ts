@@ -1,6 +1,6 @@
 import { API_LOGIN_URL, API_REGISTER_URL } from "../constants";
 import fetchWrapper from "../helpers/fetchWrapper";
-import { setUser } from "@/redux/slice";
+import { clearUser, setUser } from "@/redux/slice";
 import { AppDispatch } from "@/redux/store";
 
 export async function register(
@@ -37,5 +37,15 @@ export async function login(credentials: LoginPayload, dispatch: AppDispatch) {
   } catch (e) {
     console.log("Titta här:", e);
     throw new Error("Failed to sign in user");
+  }
+}
+
+export async function signOut(dispatch: AppDispatch) {
+  try {
+    dispatch(clearUser());
+    return true;
+  } catch (error) {
+    console.error("Failed to sign out user:", error);
+    throw new Error("Sign out failed");
   }
 }

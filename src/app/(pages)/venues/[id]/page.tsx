@@ -92,7 +92,7 @@ const SingleVenuePage = () => {
               />
             </div>
             <div className="md:hidden h-[20rem]" />
-            <div className="fixed bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg">
+            <div className="fixed max-w-[30rem] mx-auto left-0 md:left-auto bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg">
               <BookingForm venue={data} />
             </div>
           </div>

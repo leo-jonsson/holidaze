@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/api/types/user";
 import * as storage from "@/lib/utils";
+import { Bookings } from "@/api/types/venues";
 
 interface AppState {
   user: User | null;
@@ -17,16 +18,27 @@ const appSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
-
-      storage.save("user", action.payload);
+      const user = {
+        ...action.payload,
+        bookings: action.payload.bookings ?? [],
+      };
+      state.user = user;
+      storage.save("user", user);
     },
+
     clearUser: (state) => {
       state.user = null;
-      storage.remove("user");
+      localStorage.clear();
+    },
+
+    setBookings: (state, action: PayloadAction<Bookings[]>) => {
+      if (state.user) {
+        state.user.bookings = action.payload;
+        storage.save("user", state.user);
+      }
     },
   },
 });
 
-export const { setUser, clearUser } = appSlice.actions;
+export const { setUser, clearUser, setBookings } = appSlice.actions;
 export default appSlice.reducer;
