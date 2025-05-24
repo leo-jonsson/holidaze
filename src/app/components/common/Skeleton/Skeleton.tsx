@@ -20,7 +20,7 @@ function Skeleton({
       <div
         data-slot="skeleton"
         className={cn(
-          "flex flex-col gap-3 flex-grow basis-[280px] max-w-sm mx-auto mt-3",
+          "flex flex-col gap-3 flex-grow basis-[250px] max-w-sm mx-auto mt-3",
           className
         )}
         {...props}

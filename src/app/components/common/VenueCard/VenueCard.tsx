@@ -5,6 +5,7 @@ import VenueRating from "../VenueRating";
 import Link from "next/link";
 import { motion } from "motion/react";
 import Skeleton from "../Skeleton";
+import { SkeletonVariant } from "../Skeleton/Skeleton";
 
 type Props = {
   venue: Venue;
@@ -35,11 +36,11 @@ const VenueCard: React.FC<Props> = ({ venue, loading }) => {
     return `${text.substring(0, limit)}...`;
   };
 
-  if (loading) return <Skeleton />;
+  if (loading) return <Skeleton variant={SkeletonVariant.CARD} />;
 
-  const locationString = `${venue.location.city || ""}, ${
-    venue.location.country || ""
-  }`;
+  const locationString = venue.location.city
+    ? `${venue.location.city || ""}, ${venue.location.country || ""}`
+    : "Somewhere";
 
   return (
     <Link
@@ -54,6 +55,7 @@ const VenueCard: React.FC<Props> = ({ venue, loading }) => {
           translateY: 0,
           opacity: 1,
         }}
+        viewport={{ once: true }}
       >
         {/* eslint-disable @next/next/no-img-element */}
         <img
@@ -64,17 +66,20 @@ const VenueCard: React.FC<Props> = ({ venue, loading }) => {
           onError={() => setImageError(true)}
         />
 
-        <div className="w-full flex items-center justify-between">
-          <Typography.Label
-            label={truncateText(venue.name, titleCharacterLimit)}
-            className="font-semibold"
-          />
-          <VenueRating venue={venue} />
-        </div>
+        <div className="grid gap-0">
+          <div className="w-full flex items-center justify-between">
+            <Typography.Label
+              label={truncateText(venue.name, titleCharacterLimit)}
+              className="font-semibold"
+            />
+            <VenueRating venue={venue} />
+          </div>
 
-        <Typography.Label
-          label={truncateText(locationString, locationCharacterLimit)}
-        />
+          <Typography.Label
+            className="text-sm"
+            label={truncateText(locationString, locationCharacterLimit)}
+          />
+        </div>
 
         <div className="flex items-center gap-1">
           <Typography.Body label={`${venue.price}$`} className="font-medium" />

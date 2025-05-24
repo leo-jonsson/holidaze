@@ -53,16 +53,22 @@ const SingleVenuePage = () => {
                     label={`${data.maxGuests.toString()} beds`}
                   />
                 </div>
-                <Typography.H1 label={data.name} className="text-4xl" />
+                <Typography.H1
+                  label={data.name}
+                  className="text-2xl font-bold"
+                />
                 <Typography.Body label={data.description} />
               </div>
-              <div className="flex w-full justify-between items-center border py-2 px-5 rounded-lg">
+              <div className="flex w-full justify-between items-center py-4 border-b border-muted-foreground/20">
                 <div className="grid">
-                  <span>{data.owner.name}</span>
-                  <span>{data.owner.email}</span>
+                  <span className="font-semibold">
+                    Hosted by {data.owner.name}
+                  </span>
+                  <span className="text-sm">{data.owner.email}</span>
                 </div>
                 <ProfilePicture user={data.owner} size={8} />
               </div>
+
               <div className="grid gap-2">
                 <h3 className="text-lg font-bold">Where you&apos;ll be:</h3>
                 <VenueMap
@@ -92,7 +98,7 @@ const SingleVenuePage = () => {
               />
             </div>
             <div className="md:hidden h-[20rem]" />
-            <div className="fixed max-w-[30rem] mx-auto left-0 md:left-auto bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg">
+            <div className="fixed max-w-[30rem] mx-auto rounded-lg left-0 md:left-auto bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg md:border">
               <BookingForm venue={data} />
             </div>
           </div>

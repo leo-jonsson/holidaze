@@ -1,31 +1,62 @@
 import { Venue } from "@/api/types/venues";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import BookingCalendar from "../BookingCalendar/BookingCalendar";
 import GuestInput from "../GuestInput";
 import Button from "../common/Button";
 import { DateRange } from "react-day-picker";
 import { bookVenue, getBookingsByProfileName } from "@/api/bookings";
 import Typography from "../common/Typography";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Toaster from "../common/Toaster";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { RootState } from "@/redux/store";
+import useUser from "@/app/hooks/useUser";
+import { bookingSchema } from "@/api/zod";
+import { z } from "zod";
+import { differenceInDays } from "date-fns";
 
 type Props = {
   venue: Venue;
 };
 
+// The tax and fee amounts are vibe-coded just to mock some nice UI (i don't do math lol)
+
+const SERVICE_FEE_PERCENTAGE = 0.15;
+const TAX_FEE_AMOUNT = 20;
+
 const BookingForm: React.FC<Props> = ({ venue }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const user = useSelector((state: RootState) => state.app.user);
+  const user = useUser();
 
-  const [selectedDateRange, setSelectedDateRange] = useState<
-    DateRange | undefined
-  >();
-
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRange>();
   const [guestCount, setGuestCount] = useState<number>(1);
+
+  const numberOfDays = useMemo(() => {
+    if (selectedDateRange?.from && selectedDateRange?.to) {
+      return differenceInDays(selectedDateRange.to, selectedDateRange.from) + 1;
+    }
+    return 0;
+  }, [selectedDateRange]);
+
+  const nightTotal = useMemo(() => {
+    if (numberOfDays > 0) {
+      return venue.price * numberOfDays;
+    }
+    return 0;
+  }, [venue.price, numberOfDays]);
+
+  const serviceFeeTotal = useMemo(() => {
+    return nightTotal * SERVICE_FEE_PERCENTAGE;
+  }, [nightTotal]);
+
+  const taxFeeTotal = useMemo(() => {
+    return TAX_FEE_AMOUNT;
+  }, []);
+
+  const totalPrice = useMemo(() => {
+    return nightTotal + serviceFeeTotal + taxFeeTotal;
+  }, [nightTotal, serviceFeeTotal, taxFeeTotal]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,12 +66,21 @@ const BookingForm: React.FC<Props> = ({ venue }) => {
       return;
     }
 
-    if (!user?.name) {
-      toast.error("User not logged in or profile name missing.");
+    if (!user) {
+      toast.error("You must be signed in to book a venue");
       return;
     }
 
+    const formData = {
+      dateFrom: selectedDateRange.from.toISOString(),
+      dateTo: selectedDateRange.to.toISOString(),
+      guests: guestCount,
+      venueId: venue.id,
+    };
+
     try {
+      bookingSchema.parse(formData);
+
       const response = await bookVenue(
         selectedDateRange.from.toISOString(),
         selectedDateRange.to.toISOString(),
@@ -59,18 +99,28 @@ const BookingForm: React.FC<Props> = ({ venue }) => {
       });
       console.log(response);
     } catch (error) {
-      console.error(error);
-      toast.error("Booking failed. Please try again.");
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => {
+          toast.error(err.message);
+        });
+      } else {
+        console.error(error);
+        toast.error("Booking failed. Please try again.");
+      }
     }
   };
 
   return (
     <>
       <form
-        className="border py-3 md:py-10 px-2 rounded-xl flex flex-col gap-4 w-fulljustify-center items-center"
+        className="py-3 md:py-10 px-2 rounded-xl flex flex-col gap-4 w-fulljustify-center items-center"
         onSubmit={handleSubmit}
       >
         <div className="grid gap-4 max-w-[20rem] mx-auto">
+          <div className="items-center gap-1 md:flex hidden">
+            <span className="text-xl font-medium">{venue.price}$</span>
+            <span className="self-end">night</span>
+          </div>
           <BookingCalendar
             venue={venue}
             onDateChange={setSelectedDateRange}
@@ -87,6 +137,34 @@ const BookingForm: React.FC<Props> = ({ venue }) => {
               onValueChange={setGuestCount}
             />
           </div>
+
+          {numberOfDays > 0 && (
+            <>
+              <div className="h-0.5 w-full bg-muted-foreground/20" />
+              <div className="flex justify-between">
+                <Typography.Body
+                  label={`${venue.price}$ x ${numberOfDays} nights`}
+                />
+                <span>{nightTotal}$</span>
+              </div>
+              <div className="flex justify-between">
+                <Typography.Body label="Holidaze service fee" />
+                <span>{serviceFeeTotal.toFixed(2)}$</span>{" "}
+                {/* Format to 2 decimal places */}
+              </div>
+              <div className="flex justify-between">
+                <Typography.Body label="Tax fee" />
+                <span>{taxFeeTotal}$</span>
+              </div>
+              <div className="h-0.5 w-full bg-muted-foreground/20" />
+              <div className="flex justify-between font-semibold">
+                <Typography.Body label="Total" />
+                <span>{totalPrice.toFixed(2)}$</span>{" "}
+                {/* Format to 2 decimal places */}
+              </div>
+            </>
+          )}
+
           <Button
             label="Book now"
             className="rounded-full py-7 w-full"
@@ -96,11 +174,11 @@ const BookingForm: React.FC<Props> = ({ venue }) => {
               !selectedDateRange?.to ||
               guestCount <= 0 ||
               !user?.accessToken
-            } // Disable if not logged in
+            }
           />
         </div>
       </form>
-      <Toaster />
+      <Toaster theme="light" />
     </>
   );
 };

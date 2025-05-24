@@ -22,6 +22,7 @@ import useUser from "@/app/hooks/useUser";
 import { useHasMounted } from "@/app/hooks/useHasMounted";
 import { signOut } from "@/api/auth";
 import { useDispatch } from "react-redux";
+import ProfilePicture from "../../common/ProfilePicture";
 
 export function Navbar() {
   const dispatch = useDispatch();
@@ -32,15 +33,13 @@ export function Navbar() {
   if (!hasMounted) return null;
 
   return (
-    <nav className="sm:border bg-background sm:rounded-xl sticky sm:mt-5 sm:top-5 top-0 z-50 h-[4rem]">
+    <nav className="sm:border bg-background sm:rounded-full max-w-[45rem] mx-auto sticky sm:mt-5 sm:top-5 top-0 z-50 h-[4rem] md:shadow-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center">
-          <Link href="/" className="text-xl font-bold">
-            Logo
-          </Link>
-        </div>
-
         <div className="hidden md:flex md:items-center md:space-x-8">
+          <Link href="/" className="text-xl font-bold">
+            Holidaze
+          </Link>
+
           <Link
             href="/"
             className="text-sm font-medium text-foreground transition-colors hover:text-primary"
@@ -142,7 +141,9 @@ export function Navbar() {
           {user?.accessToken && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" label={user.name} />
+                <button>
+                  <ProfilePicture user={user} size={8} />
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>

@@ -88,7 +88,7 @@ const LoginPage = () => {
 
         <div className="flex justify-center mt-4">
           <p className="text-sm text-muted-foreground">
-            Dont have an account?
+            Dont have an account?{" "}
             <Link
               href="/auth/register"
               className="text-primary hover:underline"
