@@ -3,19 +3,16 @@ import fetchWrapper from "../helpers/fetchWrapper";
 import { clearUser, setUser } from "@/redux/slice";
 import { AppDispatch } from "@/redux/store";
 
-export async function register(
-  username: string,
-  email: string,
-  password: string,
-  venueManager: boolean = false
-) {
+interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  venueManager?: boolean;
+}
+
+export async function register(payload: RegisterPayload) {
   try {
-    const data = await fetchWrapper(API_REGISTER_URL, "POST", {
-      email,
-      username,
-      password,
-      venueManager,
-    });
+    const data = await fetchWrapper(API_REGISTER_URL, "POST", payload);
 
     return data;
   } catch (e) {
