@@ -1,5 +1,5 @@
 import { Venue } from "@/api/types/venues";
-import React, { useState } from "react"; // Import useState
+import React, { useState } from "react";
 import Typography from "../Typography";
 import VenueRating from "../VenueRating";
 import Link from "next/link";
@@ -57,10 +57,9 @@ const VenueCard: React.FC<Props> = ({ venue, loading }) => {
         }}
         viewport={{ once: true }}
       >
-        {/* eslint-disable @next/next/no-img-element */}
         <img
           src={imageError ? defaultImageUrl : imageUrl}
-          alt={imageAlt} // Use the determined alt text
+          alt={imageAlt}
           loading="lazy"
           className="rounded-lg aspect-square size-full object-cover"
           onError={() => setImageError(true)}
