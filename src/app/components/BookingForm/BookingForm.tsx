@@ -150,7 +150,6 @@ const BookingForm: React.FC<Props> = ({ venue }) => {
               <div className="flex justify-between">
                 <Typography.Body label="Holidaze service fee" />
                 <span>{serviceFeeTotal.toFixed(2)}$</span>{" "}
-                {/* Format to 2 decimal places */}
               </div>
               <div className="flex justify-between">
                 <Typography.Body label="Tax fee" />
@@ -160,7 +159,6 @@ const BookingForm: React.FC<Props> = ({ venue }) => {
               <div className="flex justify-between font-semibold">
                 <Typography.Body label="Total" />
                 <span>{totalPrice.toFixed(2)}$</span>{" "}
-                {/* Format to 2 decimal places */}
               </div>
             </>
           )}
