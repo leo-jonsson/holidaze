@@ -33,7 +33,7 @@ type LocationData = {
 
 const CreateVenueWizard = () => {
   const [media, setMedia] = useState<MediaArray>([]);
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{
     lat: number;
@@ -41,7 +41,7 @@ const CreateVenueWizard = () => {
   } | null>(null);
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [price, setPrice] = useState<number>(29.9);
+  const [price, setPrice] = useState<number>(49);
   const [isGeneratingDescription, setIsGeneratingDescription] =
     useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
