@@ -5,6 +5,7 @@ export interface Bookings {
   guests: number;
   created: string;
   updated: string;
+  venue?: Venue;
   customer: {
     name: string;
     email: string;

@@ -43,6 +43,7 @@ export async function login(credentials: LoginPayload, dispatch: AppDispatch) {
 export async function signOut(dispatch: AppDispatch) {
   try {
     dispatch(clearUser());
+    window.location.href = "/";
     return true;
   } catch (error) {
     console.error("Failed to sign out user:", error);

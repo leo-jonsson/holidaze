@@ -30,7 +30,7 @@ export async function getBookingsByProfileName(
   dispatch?: AppDispatch
 ): Promise<Bookings[]> {
   try {
-    const url = `${API_SINGLE_BOOKING}/${profileName}/bookings`;
+    const url = `${API_SINGLE_BOOKING}/${profileName}/bookings?_venue=true`;
     const response = await fetchWrapper(url, "GET");
     const bookings: Bookings[] = response.data;
 

@@ -17,7 +17,7 @@ import { useParams } from "next/navigation";
 
 const SingleVenuePage = () => {
   const params = useParams();
-  const user = useUser(); // This hook should provide the logged-in user's data, including the name
+  const user = useUser();
   const venueId = typeof params.id === "string" ? params.id : undefined;
 
   const { data, isPending, isLoading } = useVenue(venueId);
@@ -32,7 +32,6 @@ const SingleVenuePage = () => {
 
   console.log(data);
 
-  // Add a check to see if the current user is the owner
   const isVenueOwner = user?.venueManager && data?.owner?.name === user?.name;
 
   if (data)

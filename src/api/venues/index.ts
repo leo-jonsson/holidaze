@@ -26,6 +26,30 @@ interface CreateVenuePayload {
   };
 }
 
+interface UpdateVenuePayload {
+  name?: string;
+  description?: string;
+  media?: { url: string; alt: string }[];
+  price?: number;
+  maxGuests?: number;
+  rating?: number;
+  meta?: {
+    wifi?: boolean;
+    parking?: boolean;
+    breakfast?: boolean;
+    pets?: boolean;
+  };
+  location?: {
+    address?: string;
+    city?: string;
+    zip?: string;
+    country?: string;
+    continent?: string;
+    lat?: number;
+    lng?: number;
+  };
+}
+
 type PaginatedVenueResponse = {
   data: Venue[];
   page: number;
@@ -76,5 +100,31 @@ export async function createVenue(
   } catch (e) {
     console.error(e);
     throw new Error("Failed to create venue");
+  }
+}
+
+export async function updateVenue(
+  id: string,
+  venueData: UpdateVenuePayload
+): Promise<Venue> {
+  try {
+    const response = await fetchWrapper(
+      `${API_VENUES_URL}/${id}`,
+      "PUT",
+      venueData
+    );
+    return response.data;
+  } catch (e) {
+    console.error(e);
+    throw new Error("Failed to update venue");
+  }
+}
+
+export async function deleteVenue(id: string): Promise<void> {
+  try {
+    await fetchWrapper(`${API_VENUES_URL}/${id}`, "DELETE");
+  } catch (e) {
+    console.error(e);
+    throw new Error("Failed to delete venue");
   }
 }
