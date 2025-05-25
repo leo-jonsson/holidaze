@@ -5,22 +5,27 @@ import Blurarea from "../Blurarea";
 import { buttonVariants } from "../common/Button/Button";
 import Input from "../common/Input";
 import Label from "../common/Label";
+import DollarInput from "../DollarInput";
 
 type Step3DescriptionProps = {
   description: string;
   name: string;
+  price: number;
   onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onPriceChange: (value: number) => void;
   onGenerateDescription: () => Promise<void>;
   isGeneratingDescription: boolean;
   isActive: boolean;
 };
 
 const Step3Description: React.FC<Step3DescriptionProps> = ({
-  description,
   onDescriptionChange,
   onNameChange,
   onGenerateDescription,
+  onPriceChange,
+  price,
+  description,
   name,
   isGeneratingDescription,
   isActive,
@@ -61,6 +66,8 @@ const Step3Description: React.FC<Step3DescriptionProps> = ({
           Generate with gpt-4o ✨
         </button>
       </div>
+      <Label>The price / night of this venue</Label>
+      <DollarInput onChange={onPriceChange} value={price} />
     </div>
   );
 };

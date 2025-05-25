@@ -12,6 +12,9 @@ import Step3Description from "./AddDetails";
 
 import { generateVenueContent } from "@/api/openai";
 import Progress from "../Progress";
+import Step4Confirm from "./ConfirmDetails";
+import { createVenue } from "@/api/venues"; // Import the createVenue function
+import { Venue } from "@/api/types/venues"; // Import the Venue type if needed
 
 const libraries: ["places"] = ["places"];
 
@@ -41,7 +44,14 @@ const CreateVenueWizard = () => {
   } | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
   const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track submission
+
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [zip, setZip] = useState("");
+  const [country, setCountry] = useState("");
 
   const handleUrlsChange = (urls: string[]) => {
     const newMediaItems: MediaArray = urls.map((url) => ({
@@ -81,6 +91,10 @@ const CreateVenueWizard = () => {
     setDescription(e.target.value);
   };
 
+  const handlePriceChange = (value: number) => {
+    setPrice(value);
+  };
+
   const handleGenerateDescription = async () => {
     if (media.length === 0) {
       alert("Please upload at least one image to generate a description.");
@@ -102,21 +116,94 @@ const CreateVenueWizard = () => {
     }
   };
 
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress(e.target.value);
+    setLocationData((prevData) =>
+      prevData ? { ...prevData, address: e.target.value } : null
+    );
+  };
+
+  const handleCityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCity(e.target.value);
+    setLocationData((prevData) =>
+      prevData ? { ...prevData, city: e.target.value } : null
+    );
+  };
+
+  const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setZip(e.target.value);
+    setLocationData((prevData) =>
+      prevData ? { ...prevData, zip: e.target.value } : null
+    );
+  };
+
+  const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCountry(e.target.value);
+    setLocationData((prevData) =>
+      prevData ? { ...prevData, country: e.target.value } : null
+    );
+  };
+
+  const handleCreateVenue = async () => {
+    if (!locationData) {
+      alert("Location data is missing.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const venuePayload = {
+        name,
+        description,
+        media,
+        price,
+        maxGuests: 2,
+        location: {
+          address: locationData.address,
+          city: locationData.city,
+          zip: locationData.zip,
+          country: locationData.country,
+          lat: locationData.lat,
+          lng: locationData.lng,
+        },
+      };
+
+      console.log(venuePayload, "hallå");
+      const newVenue = await createVenue(venuePayload);
+      console.log("Venue created successfully:", newVenue);
+    } catch (error) {
+      console.error("Error creating venue:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   useEffect(() => {
     if (step === 1) {
       setLocationData(null);
       setMarkerPosition(null);
       setDescription("");
+      setAddress("");
+      setCity("");
+      setZip("");
+      setCountry("");
     }
   }, [step]);
 
   useEffect(() => {
-    if (
-      locationData &&
-      typeof locationData.lat === "number" &&
-      typeof locationData.lng === "number"
-    ) {
-      setMarkerPosition({ lat: locationData.lat, lng: locationData.lng });
+    if (locationData) {
+      setAddress(locationData.address);
+      setCity(locationData.city);
+      setZip(locationData.zip);
+      setCountry(locationData.country);
+      if (
+        typeof locationData.lat === "number" &&
+        typeof locationData.lng === "number"
+      ) {
+        setMarkerPosition({ lat: locationData.lat, lng: locationData.lng });
+      } else {
+        setMarkerPosition(null);
+      }
     } else {
       setMarkerPosition(null);
     }
@@ -124,16 +211,17 @@ const CreateVenueWizard = () => {
 
   return (
     <Section className="relative my-10">
-      {/* {step > 1 && (
-        <Button
-          label="Back"
-          onClick={handlePrevStep}
-          className="absolute top-0 left-0"
-        />
-      )} */}
-      <Progress value={step} max={5} />
       <Typography.H1 label="List a venue" />
-
+      {step > 1 && (
+        <Button
+          label="Undo"
+          onClick={handlePrevStep}
+          className="flex ml-0 self-start my-3"
+          variant="outline"
+          disabled={isSubmitting}
+        />
+      )}
+      <Progress value={step} max={5} />
       <Step1MediaUploader
         media={media}
         onUrlsChange={handleUrlsChange}
@@ -141,7 +229,6 @@ const CreateVenueWizard = () => {
         shouldReset={true}
         isActive={step === 1}
       />
-
       <LoadScript
         googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY!}
         libraries={libraries}
@@ -156,15 +243,35 @@ const CreateVenueWizard = () => {
           isActive={step === 2}
         />
       </LoadScript>
-
       <Step3Description
         description={description}
         name={name}
         onNameChange={handleNameChange}
         onDescriptionChange={handleDescriptionChange}
         onGenerateDescription={handleGenerateDescription}
+        price={price}
+        onPriceChange={handlePriceChange}
         isGeneratingDescription={isGeneratingDescription}
         isActive={step === 3}
+      />
+      <Step4Confirm
+        description={description}
+        name={name}
+        price={price}
+        locationData={locationData}
+        onNameChange={handleNameChange}
+        onDescriptionChange={handleDescriptionChange}
+        onPriceChange={handlePriceChange}
+        address={address}
+        city={city}
+        zip={zip}
+        country={country}
+        onAddressChange={handleAddressChange}
+        onCityChange={handleCityChange}
+        onZipChange={handleZipChange}
+        onCountryChange={handleCountryChange}
+        isActive={step === 4}
+        onSubmit={handleCreateVenue}
       />
 
       <div className="h-10" />
@@ -175,15 +282,20 @@ const CreateVenueWizard = () => {
             ? "Select Location"
             : step === 3 && !description
             ? "Add Description"
+            : step === 4
+            ? isSubmitting
+              ? "Creating Venue..."
+              : "Create Venue"
             : step < 6
             ? "Next"
             : "Show Summary"
         }
-        onClick={handleNextStep}
+        onClick={step === 4 ? handleCreateVenue : handleNextStep}
         disabled={
           (step === 2 && !locationData) ||
           (step === 3 && !description) ||
-          isGeneratingDescription
+          isGeneratingDescription ||
+          (step === 4 && isSubmitting)
         }
       />
       <div className="h-2" />

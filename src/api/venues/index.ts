@@ -39,7 +39,7 @@ export async function getVenues(
 ): Promise<PaginatedVenueResponse> {
   try {
     const response = await fetchWrapper(
-      `${API_VENUES_URL}/?page=${page}&limit=${limit}&_owner=true&_bookings=true&sortOrder=asc&sort=created`,
+      `${API_VENUES_URL}/?page=${page}&limit=${limit}&_owner=true&_bookings=true&sortOrder=desc&sort=created`,
       "GET"
     );
     return {

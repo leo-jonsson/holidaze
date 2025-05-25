@@ -1,4 +1,3 @@
-// src/app/components/CreateVenue/Step2LocationSelector.tsx
 import React, { useRef } from "react";
 import Typography from "../common/Typography";
 import { GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
@@ -135,7 +134,7 @@ const Step2LocationSelector: React.FC<Step2LocationSelectorProps> = ({
           >
             <input
               type="text"
-              placeholder="Search for a location"
+              placeholder="Search for an address"
               className="w-full p-2 border rounded-md mb-4"
             />
           </Autocomplete>
