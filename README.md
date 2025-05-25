@@ -58,6 +58,7 @@ This project is a venue booking platform built with Next.js, integrating with th
 3. **Run it locally:**
 
    ```bash
+   npm i 
    npm run dev
    ```
 
