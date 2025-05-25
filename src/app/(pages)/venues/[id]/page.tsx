@@ -45,7 +45,7 @@ const SingleVenuePage = () => {
           ))}
         <div className="flex flex-col gap-4 relative ">
           <VenueMedia media={data.media} />
-          <div className="grid md:grid-cols-2 gap-4 relative">
+          <div className="grid md:grid-cols-2 gap-4 relative w-full">
             <div className="grid gap-10">
               <div className="grid gap-2">
                 <div className="flex items-center gap-3 text-muted-foreground">
@@ -104,7 +104,7 @@ const SingleVenuePage = () => {
               />
             </div>
             <div className="md:hidden h-[20rem]" />
-            <div className="fixed max-w-[30rem] mx-auto rounded-lg left-0 md:left-auto bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg md:border">
+            <div className="fixed max-w-full md:max-w-[30rem] mx-auto rounded-lg left-0 md:left-auto bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg md:border">
               {!isVenueOwner && <BookingForm venue={data} />}
               {isVenueOwner && (
                 <div className="flex flex-col justify-between gap-4 p-4 md:min-h-[150px]">
