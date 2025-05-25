@@ -293,6 +293,7 @@ const PopoverCloseButton = React.forwardRef<
 
   return (
     <Button
+      label="Close"
       ref={ref}
       type="button"
       variant="ghost"
@@ -300,9 +301,7 @@ const PopoverCloseButton = React.forwardRef<
       className={cn("h-8 w-8", className)}
       onClick={closePopover}
       aria-label="Close popover"
-    >
-      <X className="h-4 w-4" />
-    </Button>
+    />
   );
 });
 PopoverCloseButton.displayName = "PopoverCloseButton";
@@ -376,6 +375,7 @@ const PopoverButton = React.forwardRef<HTMLButtonElement, PopoverButtonProps>(
   ({ children, onClick, className }, ref) => {
     return (
       <Button
+        label="Hello world"
         ref={ref}
         variant="ghost"
         className={cn(
@@ -383,9 +383,7 @@ const PopoverButton = React.forwardRef<HTMLButtonElement, PopoverButtonProps>(
           className
         )}
         onClick={onClick}
-      >
-        {children}
-      </Button>
+      ></Button>
     );
   }
 );
