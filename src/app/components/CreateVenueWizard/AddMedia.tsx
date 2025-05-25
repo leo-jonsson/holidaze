@@ -26,7 +26,7 @@ const Step1MediaUploader: React.FC<Step1MediaUploaderProps> = ({
   isActive,
 }) => {
   return (
-    <div className={`grid gap-4 mt-4 ${isActive ? "" : "hidden"}`}>
+    <div className={`grid gap-4 ${isActive ? "" : "hidden"}`}>
       <Typography.H2 label="Step 1: Add media" />
       <FileUploader
         shouldReset={shouldReset}
