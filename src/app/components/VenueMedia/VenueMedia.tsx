@@ -1,16 +1,15 @@
-/* eslint-disable @next/next/no-img-element */
-import { Venue } from "@/api/types/venues";
 import React from "react";
 
 type Props = {
-  venue: Venue;
+  media: {
+    url: string;
+    alt: string;
+  }[];
 };
 
 const FALLBACK_IMAGE = "/placeholder.jpg";
 
-const VenueMedia: React.FC<Props> = ({ venue }) => {
-  const media = venue.media;
-
+const VenueMedia: React.FC<Props> = ({ media }) => {
   const getImageUrl = (index: number) => {
     return media && media.length > index && media[index]?.url
       ? media[index].url
@@ -20,7 +19,7 @@ const VenueMedia: React.FC<Props> = ({ venue }) => {
   const getImageAlt = (index: number) => {
     return media && media.length > index && media[index]?.alt
       ? media[index].alt
-      : `Image for ${venue.name}`;
+      : "alt text";
   };
 
   return (

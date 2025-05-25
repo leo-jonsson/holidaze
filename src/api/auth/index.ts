@@ -8,6 +8,10 @@ interface RegisterPayload {
   email: string;
   password: string;
   venueManager?: boolean;
+  avatar?: {
+    url: string;
+    alt: string;
+  };
 }
 
 export async function register(payload: RegisterPayload) {
@@ -20,7 +24,6 @@ export async function register(payload: RegisterPayload) {
     throw new Error("Failed to register a new account");
   }
 }
-
 interface LoginPayload {
   email: string;
   password: string;

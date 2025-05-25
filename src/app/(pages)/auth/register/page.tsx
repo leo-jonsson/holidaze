@@ -1,3 +1,5 @@
+// src/app/auth/register/page.tsx
+
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -18,8 +20,15 @@ import Link from "next/link";
 import Section from "@/app/components/common/Section";
 import { register } from "@/api/auth";
 import { registerSchema } from "@/api/zod";
-import { Checkbox } from "@/components/common/checkbox";
+import Checkbox from "@/app/components/Checkbox";
 import { useState } from "react";
+import FileUploader from "@/app/components/common/FileUploader";
+
+const defaultAvatarURLs = [
+  "https://images.unsplash.com/photo-1740252117013-4fb21771e7ca?q=80&w=2500&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1740252117027-4275d3f84385?q=80&w=2500&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1740252117070-7aa2955b25f8?q=80&w=2500&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+];
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -36,6 +45,9 @@ const RegisterPage = () => {
   });
 
   const [isVenueManager, setIsVenueManager] = useState<boolean>(false);
+  const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string>(
+    defaultAvatarURLs[0]
+  );
 
   const onSubmit = async (values: RegisterFormValues) => {
     const registrationData = {
@@ -43,13 +55,16 @@ const RegisterPage = () => {
       email: values.email,
       password: values.password,
       venueManager: isVenueManager,
+      avatar: {
+        url: selectedAvatarUrl!,
+        alt: `Profile picture of ${values.name}`,
+      },
     };
 
-    console.log(registrationData);
+    console.log(registrationData, "registration data");
+
     try {
       const res = await register(registrationData);
-
-      console.log(registrationData, "test");
 
       if (res.data) {
         console.log("Registration successful:", res.data);
@@ -69,6 +84,20 @@ const RegisterPage = () => {
       });
     }
   };
+
+  const handleAvatarSelect = (url: string) => {
+    setSelectedAvatarUrl(url);
+  };
+
+  const handleFileUpload = (urls: string[]) => {
+    if (urls && urls.length > 0) {
+      setSelectedAvatarUrl(urls[0]);
+    }
+  };
+
+  // This just checks if one the default urls includes the new uploaded one, which should return false
+
+  const isDefaultAvatarSelected = defaultAvatarURLs.includes(selectedAvatarUrl);
 
   return (
     <Section className="min-h-[70vh]">
@@ -127,6 +156,53 @@ const RegisterPage = () => {
               </div>
             </FormItem>
 
+            <FormItem>
+              <FormLabel>Choose Avatar</FormLabel>
+              <div className="grid">
+                <div className="flex space-x-3">
+                  {defaultAvatarURLs.map((url) => (
+                    <div
+                      key={url}
+                      className={`relative size-14 rounded-full overflow-hidden cursor-pointer border-2 ${
+                        selectedAvatarUrl === url
+                          ? "border-primary"
+                          : "border-transparent"
+                      }`}
+                      onClick={() => handleAvatarSelect(url)}
+                    >
+                      <img
+                        src={url}
+                        alt="Default Avatar"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  ))}
+
+                  {!isDefaultAvatarSelected && selectedAvatarUrl && (
+                    <div
+                      className={`relative size-14 rounded-full overflow-hidden cursor-pointer border-2 ${
+                        !isDefaultAvatarSelected
+                          ? "border-primary"
+                          : "border-transparent"
+                      } flex items-center justify-center bg-muted`}
+                    >
+                      <img
+                        src={selectedAvatarUrl}
+                        alt="Uploaded Avatar"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="mt-4 grid gap-2">
+                  <FileUploader
+                    shouldReset={false}
+                    endpoint="imageUploader"
+                    onUrlsChange={handleFileUpload}
+                  />
+                </div>
+              </div>
+            </FormItem>
             <Button type="submit" className="w-full" label="Sign up" />
           </form>
         </Form>

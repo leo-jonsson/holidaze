@@ -38,7 +38,7 @@ const SingleVenuePage = () => {
             </div>
           ))}
         <div className="flex flex-col gap-4 relative ">
-          <VenueMedia venue={data} />
+          <VenueMedia media={data.media} />
           <div className="grid md:grid-cols-2 gap-4 relative">
             <div className="grid gap-10">
               <div className="grid gap-2">

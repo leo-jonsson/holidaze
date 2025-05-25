@@ -52,7 +52,7 @@ export function Navbar() {
           >
             Venues
           </Link>
-          {user?.accessToken && (
+          {user?.accessToken && !user?.venueManager && (
             <Link
               href="/bookings"
               className="relative text-sm font-medium text-foreground transition-colors hover:text-primary"
@@ -63,6 +63,14 @@ export function Navbar() {
                   {user.bookings.length}
                 </span>
               )}
+            </Link>
+          )}
+          {user?.accessToken && user?.venueManager && (
+            <Link
+              href="/venues/create"
+              className="relative text-sm font-medium text-foreground transition-colors hover:text-primary"
+            >
+              List a venue
             </Link>
           )}
         </div>
