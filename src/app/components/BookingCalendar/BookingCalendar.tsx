@@ -65,8 +65,6 @@ export default function BookingCalendar({ venue, date, onDateChange }: Props) {
       const hasOverlap = selectedDates.some(isDateDisabled);
 
       if (hasOverlap) {
-        // Prevent selection and show an error message (if you have one)
-        // You can add a toast or other notification here if needed
         return;
       }
     }
@@ -74,8 +72,7 @@ export default function BookingCalendar({ venue, date, onDateChange }: Props) {
     onDateChange(range);
   };
 
-  // Define the desired date format
-  const dateFormat = "dd/MM/yyyy"; // Example: "DD/MM/YYYY"
+  const dateFormat = "dd/MM/yyyy";
 
   return (
     <div className="flex w-full flex-col gap-1">
