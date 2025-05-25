@@ -3,7 +3,7 @@ import { generateText } from "ai";
 
 export async function generateVenueContent(url: string, location: string) {
   const openai = createOpenAI({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    apiKey: process.env.NEXT_OPENAI_API_KEY,
   });
   const { text } = await generateText({
     model: openai("gpt-4o-mini"),

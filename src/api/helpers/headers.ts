@@ -2,7 +2,7 @@ import { getUserToken } from "./token";
 
 export default function headers() {
   const headers = new Headers();
-  const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+  const API_KEY = process.env.NEXT_API_KEY;
   const token = getUserToken();
 
   headers.append("Content-Type", "application/json");

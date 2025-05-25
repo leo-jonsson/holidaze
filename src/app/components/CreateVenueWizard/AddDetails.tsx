@@ -1,8 +1,8 @@
 import React from "react";
 import Typography from "../common/Typography";
 import Textarea from "../common/Textarea";
-import Blurarea from "../Blurarea"; // Assuming you have a Blurarea component
-import { buttonVariants } from "../common/Button/Button"; // Assuming buttonVariants
+import Blurarea from "../Blurarea";
+import { buttonVariants } from "../common/Button/Button";
 import Input from "../common/Input";
 import Label from "../common/Label";
 

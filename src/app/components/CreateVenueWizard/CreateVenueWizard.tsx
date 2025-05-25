@@ -11,6 +11,7 @@ import Step2LocationSelector from "./AddLocation";
 import Step3Description from "./AddDetails";
 
 import { generateVenueContent } from "@/api/openai";
+import Progress from "../Progress";
 
 const libraries: ["places"] = ["places"];
 
@@ -30,7 +31,7 @@ type LocationData = {
   lng: number;
 };
 
-const CreateVenueForm = () => {
+const CreateVenueWizard = () => {
   const [media, setMedia] = useState<MediaArray>([]);
   const [step, setStep] = useState(1);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
@@ -123,13 +124,14 @@ const CreateVenueForm = () => {
 
   return (
     <Section className="relative my-10">
-      {step > 1 && (
+      {/* {step > 1 && (
         <Button
           label="Back"
           onClick={handlePrevStep}
           className="absolute top-0 left-0"
         />
-      )}
+      )} */}
+      <Progress value={step} max={5} />
       <Typography.H1 label="List a venue" />
 
       <Step1MediaUploader
@@ -141,7 +143,7 @@ const CreateVenueForm = () => {
       />
 
       <LoadScript
-        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY!}
+        googleMapsApiKey={process.env.NEXT_GOOGLE_API_KEY!}
         libraries={libraries}
         onLoad={() => console.log("Google Maps script loaded")}
         onError={(error) => console.error("Google Maps script error:", error)}
@@ -189,4 +191,4 @@ const CreateVenueForm = () => {
   );
 };
 
-export default CreateVenueForm;
+export default CreateVenueWizard;
