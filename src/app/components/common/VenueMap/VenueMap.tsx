@@ -37,7 +37,7 @@ const VenueMap = ({ lat, lng, city, country }: Props) => {
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
           address
-        )}&key=${process.env.NEXT_GOOGLE_API_KEY}`
+        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
       );
       const data = await res.json();
 
@@ -55,7 +55,7 @@ const VenueMap = ({ lat, lng, city, country }: Props) => {
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.NEXT_GOOGLE_API_KEY!,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY!,
   });
 
   if (!isLoaded || !resolvedLatLng)

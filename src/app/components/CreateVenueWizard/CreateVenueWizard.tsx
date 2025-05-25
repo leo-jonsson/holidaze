@@ -143,7 +143,7 @@ const CreateVenueWizard = () => {
       />
 
       <LoadScript
-        googleMapsApiKey={process.env.NEXT_GOOGLE_API_KEY!}
+        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY!}
         libraries={libraries}
         onLoad={() => console.log("Google Maps script loaded")}
         onError={(error) => console.error("Google Maps script error:", error)}
