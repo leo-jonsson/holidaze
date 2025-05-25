@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Holidaze
+
+This project is a venue booking platform built with Next.js, integrating with the Noroff API for venue data and booking functionality. It utilizes several modern technologies to provide a rich and interactive user experience, including OpenAI via the Vercel AI SDK, Google Maps API, Shadcn UI for components, and Framer Motion for animations.
+
+## Features
+
+- **Venue Listing:** Browse a list of available venues fetched from the Noroff API.
+- **Venue Details:** View detailed information about each venue, including descriptions, amenities, and booking options.
+- **Booking Functionality:** Users can book venues based on available dates and guest capacity (integrates with the Noroff API).
+- **User Authentication:** Secure user authentication to manage bookings and profile information.
+- **AI Integration (OpenAI via Vercel AI SDK):** (Potential future feature or current limited use) Could be used for features like:
+    - Generate a description for a venue in creation mode
+- **Google Maps API:** Display venue locations on an interactive map.
+- **Shadcn UI:** Provides a set of accessible and customizable UI components built on top of Tailwind CSS.
+- **Framer Motion:** Enhance the user interface with smooth and engaging animations.
+
+## Technologies Used
+
+- **Next.js:** React framework for server-side rendering, static site generation, and API routes.
+- **Noroff API:** Provides venue data and booking endpoints.
+- **OpenAI (via Vercel AI SDK):** For integrating AI capabilities.
+- **Google Maps API:** For displaying maps and venue locations.
+- **Shadcn UI:** Component library based on Tailwind CSS.
+- **Tailwind CSS:** Utility-first CSS framework for rapid styling.
+- **Framer Motion (Motion):** Animation library for React.
+- **Vercel:** Deployment platform.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (version 18 or higher)
+- npm or yarn
+- Noroff API Key
+- Google Maps API Key
+- OpenAI API Key
+- Uploadthing API Secret / Token
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository:**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   git clone https://github.com/leo-jonsson/holidaze
+   cd holidaze
+   code .
+   ```
 
-## Learn More
+2. **Insert .env variables:**
+    ***Look at .env.example
+   ```bash
+   NEXT_PUBLIC_API_KEY = heregoesthekey
+   NEXT_PUBLIC_GOOGLE_API_KEY = heregoestheotherkey
+   UPLOADTHING_TOKEN = heregoesthethirdkey
+   OPENAI_API_KEY = heregoesthefourthkey
+   ```   
 
-To learn more about Next.js, take a look at the following resources:
+3. **Run it locally:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
