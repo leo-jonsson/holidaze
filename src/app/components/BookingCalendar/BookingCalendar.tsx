@@ -104,6 +104,7 @@ export default function BookingCalendar({ venue, date, onDateChange }: Props) {
           className="max-h-[90vh] overflow-y-auto p-4 flex justify-center flex-col"
         >
           <Calendar
+            weekStartsOn={1}
             mode="range"
             selected={date}
             onSelect={handleDateSelect}

@@ -1,3 +1,4 @@
+// src/app/components/CreateVenue/Step2LocationSelector.tsx
 import React, { useRef } from "react";
 import Typography from "../common/Typography";
 import { GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";

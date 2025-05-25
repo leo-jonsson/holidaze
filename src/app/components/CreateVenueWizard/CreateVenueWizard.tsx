@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Section from "../common/Section";
 import Typography from "../common/Typography";
 import Button from "../common/Button";
-import { LoadScript } from "@react-google-maps/api";
 
 import Step1MediaUploader from "./AddMedia";
 import Step2LocationSelector from "./AddLocation";
@@ -13,10 +12,8 @@ import Step3Description from "./AddDetails";
 import { generateVenueContent } from "@/api/openai";
 import Progress from "../Progress";
 import Step4Confirm from "./ConfirmDetails";
-import { createVenue } from "@/api/venues"; // Import the createVenue function
-import { Venue } from "@/api/types/venues"; // Import the Venue type if needed
-
-const libraries: ["places"] = ["places"];
+import { createVenue } from "@/api/venues";
+import Step5Success from "./Success";
 
 type MediaItem = {
   url: string;
@@ -36,22 +33,26 @@ type LocationData = {
 
 const CreateVenueWizard = () => {
   const [media, setMedia] = useState<MediaArray>([]);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [markerPosition, setMarkerPosition] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
-  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // State to track submission
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [price, setPrice] = useState<number>(29.9);
+  const [isGeneratingDescription, setIsGeneratingDescription] =
+    useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [zip, setZip] = useState("");
-  const [country, setCountry] = useState("");
+  const [address, setAddress] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [zip, setZip] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [maxGuests, setMaxGuests] = useState<number>(1);
+
+  const [newListing, setNewListing] = useState({ name: "", id: "" });
 
   const handleUrlsChange = (urls: string[]) => {
     const newMediaItems: MediaArray = urls.map((url) => ({
@@ -95,6 +96,10 @@ const CreateVenueWizard = () => {
     setPrice(value);
   };
 
+  const handleMaxGuestsChange = (value: number) => {
+    setMaxGuests(value);
+  };
+
   const handleGenerateDescription = async () => {
     if (media.length === 0) {
       alert("Please upload at least one image to generate a description.");
@@ -103,10 +108,7 @@ const CreateVenueWizard = () => {
 
     setIsGeneratingDescription(true);
     try {
-      const generatedText = await generateVenueContent(
-        media[0].url,
-        locationData?.city ?? ""
-      );
+      const generatedText = await generateVenueContent(media[0].url);
       setDescription(generatedText);
     } catch (error) {
       console.error("Error generating description:", error);
@@ -146,7 +148,6 @@ const CreateVenueWizard = () => {
 
   const handleCreateVenue = async () => {
     if (!locationData) {
-      alert("Location data is missing.");
       return;
     }
 
@@ -157,7 +158,7 @@ const CreateVenueWizard = () => {
         description,
         media,
         price,
-        maxGuests: 2,
+        maxGuests,
         location: {
           address: locationData.address,
           city: locationData.city,
@@ -166,15 +167,22 @@ const CreateVenueWizard = () => {
           lat: locationData.lat,
           lng: locationData.lng,
         },
+        rating: 5,
+        meta: {
+          wifi: true,
+          parking: true,
+          breakfast: true,
+          pets: true,
+        },
       };
 
-      console.log(venuePayload, "hallå");
       const newVenue = await createVenue(venuePayload);
-      console.log("Venue created successfully:", newVenue);
+      setNewListing(newVenue);
     } catch (error) {
       console.error("Error creating venue:", error);
     } finally {
       setIsSubmitting(false);
+      handleNextStep();
     }
   };
 
@@ -209,6 +217,28 @@ const CreateVenueWizard = () => {
     }
   }, [locationData]);
 
+  const buttonLabel =
+    step === 2 && !locationData
+      ? "Select Location"
+      : step === 3 && !description
+      ? "Add Description"
+      : step === 4
+      ? isSubmitting
+        ? "Creating Venue..."
+        : "Create Venue"
+      : step < 5
+      ? "Next"
+      : "Show Summary";
+
+  const isButtonDisabled =
+    (step === 1 && media.length <= 0) ||
+    (step === 2 && !locationData) ||
+    (step === 3 && !description) ||
+    isGeneratingDescription ||
+    (step === 4 && isSubmitting);
+
+  const handleButtonClick = step === 4 ? handleCreateVenue : handleNextStep;
+
   return (
     <Section className="relative my-10">
       <Typography.H1 label="List a venue" />
@@ -229,20 +259,13 @@ const CreateVenueWizard = () => {
         shouldReset={true}
         isActive={step === 1}
       />
-      <LoadScript
-        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY!}
-        libraries={libraries}
-        onLoad={() => console.log("Google Maps script loaded")}
-        onError={(error) => console.error("Google Maps script error:", error)}
-      >
-        <Step2LocationSelector
-          locationData={locationData}
-          markerPosition={markerPosition}
-          onLocationChange={handleLocationChange}
-          onMarkerPositionChange={handleMarkerPositionChange}
-          isActive={step === 2}
-        />
-      </LoadScript>
+      <Step2LocationSelector
+        locationData={locationData}
+        markerPosition={markerPosition}
+        onLocationChange={handleLocationChange}
+        onMarkerPositionChange={handleMarkerPositionChange}
+        isActive={step === 2}
+      />
       <Step3Description
         description={description}
         name={name}
@@ -253,6 +276,8 @@ const CreateVenueWizard = () => {
         onPriceChange={handlePriceChange}
         isGeneratingDescription={isGeneratingDescription}
         isActive={step === 3}
+        maxGuests={maxGuests}
+        onMaxGuestsChange={handleMaxGuestsChange}
       />
       <Step4Confirm
         description={description}
@@ -273,31 +298,17 @@ const CreateVenueWizard = () => {
         isActive={step === 4}
         onSubmit={handleCreateVenue}
       />
+      <Step5Success isActive={step === 5} venue={newListing} />
 
       <div className="h-10" />
       <Button
         className="fixed bottom-0 rounded-none md:rounded-lg md:bottom-2 w-full max-w-[75rem]"
-        label={
-          step === 2 && !locationData
-            ? "Select Location"
-            : step === 3 && !description
-            ? "Add Description"
-            : step === 4
-            ? isSubmitting
-              ? "Creating Venue..."
-              : "Create Venue"
-            : step < 6
-            ? "Next"
-            : "Show Summary"
-        }
-        onClick={step === 4 ? handleCreateVenue : handleNextStep}
-        disabled={
-          (step === 2 && !locationData) ||
-          (step === 3 && !description) ||
-          isGeneratingDescription ||
-          (step === 4 && isSubmitting)
-        }
+        label={buttonLabel}
+        onClick={handleButtonClick}
+        disabled={isButtonDisabled}
+        style={{ display: step === 5 ? "none" : "block" }}
       />
+
       <div className="h-2" />
     </Section>
   );

@@ -45,7 +45,6 @@ const VenueMap = ({ lat, lng, city, country }: Props) => {
         const location = data.results[0].geometry.location;
         setResolvedLatLng(location);
       } else {
-        console.warn("Geocoding failed, using default.");
         setResolvedLatLng(DEFAULT_COORDINATES);
       }
     };

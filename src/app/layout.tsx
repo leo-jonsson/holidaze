@@ -22,14 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <Providers>
-        <body className={`${poppins.variable} antialiased`}>
+      <body className={`${poppins.variable} antialiased`}>
+        <Providers>
           <main className="max-w-7xl mx-auto">
             <Navbar />
             {children}
           </main>
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }
