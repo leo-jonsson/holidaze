@@ -1,5 +1,3 @@
-// src/app/auth/register/page.tsx
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -41,6 +39,7 @@ const RegisterPage = () => {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -70,14 +69,14 @@ const RegisterPage = () => {
         console.log("Registration successful:", res.data);
         router.push("/auth/login");
       } else {
-        console.error("Registration failed:", res);
         form.setError("email", {
           type: "manual",
-          message: "Registration failed. Please try again.",
+          message:
+            res.errors?.[0]?.message ||
+            "Registration failed. Please try again.",
         });
       }
     } catch (error) {
-      console.error("Registration error:", error);
       form.setError("email", {
         type: "manual",
         message: "Registration failed. Please try again.",
@@ -94,8 +93,6 @@ const RegisterPage = () => {
       setSelectedAvatarUrl(urls[0]);
     }
   };
-
-  // This just checks if one the default urls includes the new uploaded one, which should return false
 
   const isDefaultAvatarSelected = defaultAvatarURLs.includes(selectedAvatarUrl);
 
@@ -136,6 +133,19 @@ const RegisterPage = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="••••••••" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>

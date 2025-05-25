@@ -17,7 +17,7 @@ export interface Bookings {
       url: string;
       alt: string;
     };
-  }[];
+  };
 }
 
 export interface Venue {

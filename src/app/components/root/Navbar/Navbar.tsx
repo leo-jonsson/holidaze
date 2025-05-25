@@ -13,7 +13,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/app/components/common/DropdownMenu";
 import Button from "@/app/components/common/Button";
@@ -23,6 +25,13 @@ import { useHasMounted } from "@/app/hooks/useHasMounted";
 import { signOut } from "@/api/auth";
 import { useDispatch } from "react-redux";
 import ProfilePicture from "../../common/ProfilePicture";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../../Dialog/Dialog";
+import AvatarUpdateForm from "../../UpdateAvatar/UpdateAvatar";
 
 export function Navbar() {
   const dispatch = useDispatch();
@@ -155,12 +164,24 @@ export function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="focus:bg-accent w-full  focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-muted">
+                      Settings
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogTitle>Update your avatar</DialogTitle>
+                    <AvatarUpdateForm />
+                  </DialogContent>
+                </Dialog>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={async () => await signOut(dispatch)}>
-                  Sign out
+                  <button>Sign out</button>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link href="/venues/user">Manage venues</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

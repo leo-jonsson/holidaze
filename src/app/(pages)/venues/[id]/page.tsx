@@ -1,6 +1,7 @@
 "use client";
 
 import BookingForm from "@/app/components/BookingForm/BookingForm";
+import { buttonVariants } from "@/app/components/common/Button/Button";
 import ProfilePicture from "@/app/components/common/ProfilePicture/ProfilePicture";
 import Section from "@/app/components/common/Section";
 import Skeleton from "@/app/components/common/Skeleton";
@@ -8,12 +9,15 @@ import Typography from "@/app/components/common/Typography";
 import VenueMap from "@/app/components/common/VenueMap/VenueMap";
 import Recommendations from "@/app/components/Recommendations/Recommendations";
 import VenueMedia from "@/app/components/VenueMedia/VenueMedia";
+import useUser from "@/app/hooks/useUser";
 import useVenue from "@/app/hooks/useVenue";
 import { Check } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const SingleVenuePage = () => {
   const params = useParams();
+  const user = useUser(); // This hook should provide the logged-in user's data, including the name
   const venueId = typeof params.id === "string" ? params.id : undefined;
 
   const { data, isPending, isLoading } = useVenue(venueId);
@@ -27,6 +31,9 @@ const SingleVenuePage = () => {
   }
 
   console.log(data);
+
+  // Add a check to see if the current user is the owner
+  const isVenueOwner = user?.venueManager && data?.owner?.name === user?.name;
 
   if (data)
     return (
@@ -99,7 +106,18 @@ const SingleVenuePage = () => {
             </div>
             <div className="md:hidden h-[20rem]" />
             <div className="fixed max-w-[30rem] mx-auto rounded-lg left-0 md:left-auto bottom-0 w-full bg-background z-50 md:z-0 md:sticky md:top-[15rem] self-start md:shadow-lg md:border">
-              <BookingForm venue={data} />
+              {!isVenueOwner && <BookingForm venue={data} />}
+              {isVenueOwner && (
+                <div className="flex flex-col justify-between gap-4 p-4 md:min-h-[150px]">
+                  <Typography.Label label="Wanna change something?" />
+                  <Link
+                    href={`/venues/edit/${data.id}`}
+                    className={buttonVariants({ variant: "default" })}
+                  >
+                    Edit Venue
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

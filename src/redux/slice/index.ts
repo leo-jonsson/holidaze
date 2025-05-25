@@ -13,6 +13,11 @@ const initialState: AppState = {
   user: storedUser ?? null,
 };
 
+interface AvatarPayload {
+  url: string;
+  alt: string;
+}
+
 const appSlice = createSlice({
   name: "app",
   initialState,
@@ -37,8 +42,16 @@ const appSlice = createSlice({
         storage.save("user", state.user);
       }
     },
+
+    updateUserAvatar: (state, action: PayloadAction<AvatarPayload>) => {
+      if (state.user) {
+        state.user.avatar = action.payload;
+        storage.save("user", state.user);
+      }
+    },
   },
 });
 
-export const { setUser, clearUser, setBookings } = appSlice.actions;
+export const { setUser, clearUser, setBookings, updateUserAvatar } =
+  appSlice.actions;
 export default appSlice.reducer;

@@ -20,6 +20,7 @@ import Section from "@/app/components/common/Section";
 import { login } from "@/api/auth";
 import { loginSchema } from "@/api/zod";
 import { getBookingsByProfileName } from "@/api/bookings";
+import { useState } from "react";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -35,21 +36,25 @@ const LoginPage = () => {
     },
   });
 
+  const [loginError, setLoginError] = useState<string | null>(null);
+
   const onSubmit = async (values: LoginFormValues) => {
     console.log(values);
+    setLoginError(null);
 
     try {
       const res = await login(values, dispatch);
 
       if (res.data?.name) {
         await getBookingsByProfileName(res.data.name, dispatch);
-
         router.push("/");
       } else {
         console.error("Login failed or user name not found in response:", res);
+        setLoginError("Login failed. Please check your email and password.");
       }
     } catch (error) {
       console.error("Login error:", error);
+      setLoginError("An unexpected error occurred. Please try again later.");
     }
   };
 
@@ -84,6 +89,11 @@ const LoginPage = () => {
                 </FormItem>
               )}
             />
+            {loginError && (
+              <p className="text-destructive text-sm text-center">
+                {loginError}
+              </p>
+            )}
             <Button type="submit" className="w-full" label="Sign in" />
           </form>
         </Form>

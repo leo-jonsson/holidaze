@@ -9,3 +9,5 @@ export const API_VENUES_URL = `${API_BASE_URL}/holidaze/venues`;
 export const API_BOOKING = `${API_BASE_URL}/holidaze/bookings`;
 
 export const API_SINGLE_BOOKING = `${API_BASE_URL}/holidaze/profiles`;
+
+export const API_HOLIDAZE_USER = `${API_BASE_URL}/holidaze/profiles`;

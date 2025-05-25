@@ -27,14 +27,16 @@ export async function bookVenue(
 
 export async function getBookingsByProfileName(
   profileName: string,
-  dispatch: AppDispatch
+  dispatch?: AppDispatch
 ): Promise<Bookings[]> {
   try {
     const url = `${API_SINGLE_BOOKING}/${profileName}/bookings`;
     const response = await fetchWrapper(url, "GET");
     const bookings: Bookings[] = response.data;
 
-    dispatch(setBookings(bookings));
+    if (dispatch) {
+      dispatch(setBookings(bookings));
+    }
 
     return bookings;
   } catch (error) {
